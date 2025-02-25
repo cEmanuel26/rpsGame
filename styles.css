@@ -1,0 +1,157 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+h1 {
+  font-size: 48px;
+  color: #1f2937;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 50px;
+  border-bottom: 2px solid #1f2937;
+  padding-bottom: 50px;
+}
+h2 {
+  text-align: center;
+  margin: 40px 0;
+  font-size: 36px;
+  color: #1f2937;
+  font-weight: 900;
+}
+.container p {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+.playCards {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 80px;
+}
+.result {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.card {
+  width: 200px;
+  height: 160px;
+  border: 1px solid #1f2937;
+}
+.separatorContainer {
+  flex-direction: row;
+  justify-content: center;
+  display: flex;
+}
+.separator {
+  width: 50px;
+  height: 50px;
+  position: relative;
+  display: flex;
+  margin-bottom: 50px;
+}
+.hidden {
+  display: none;
+  transition: all 1s linear;
+}
+
+.separator::before,
+.separator::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  background-color: #1f2937;
+}
+
+.separator::before {
+  transform: rotate(45deg);
+  top: 0;
+  left: 50%;
+  transform-origin: center;
+}
+
+.separator::after {
+  transform: rotate(-45deg);
+  top: 0;
+  left: 50%;
+  transform-origin: center;
+}
+.flashRed {
+  border: 4px solid red;
+  animation: flashRed 1s infinite;
+  position: relative;
+}
+
+.flashRed::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 0, 0, 0.3);
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes flashRed {
+  0% {
+    background-color: rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    background-color: rgba(255, 0, 0, 0);
+  }
+  100% {
+    background-color: rgba(255, 0, 0, 0.3);
+  }
+}
+
+.flashGreen {
+  border: 4px solid rgb(12, 230, 12);
+  animation: flashGreen 1s infinite;
+  position: relative;
+}
+
+.flashGreen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 255, 0, 0.3);
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes flashGreen {
+  0% {
+    background-color: rgba(0, 255, 0, 0.3);
+  }
+  50% {
+    background-color: rgba(0, 255, 0, 0);
+  }
+  100% {
+    background-color: rgba(0, 255, 0, 0.3);
+  }
+}
+
+.rock {
+  background: url('/images/fist.png') center;
+  background-size: 400px;
+  background-repeat: no-repeat;
+}
+.paper {
+  background: url('/images/handgesture.png') center;
+  background-size: 360px;
+  background-repeat: no-repeat;
+}
+.scissors {
+  background: url('/images/scissors.png') center;
+  background-size: 400px;
+  background-repeat: no-repeat;
+}
