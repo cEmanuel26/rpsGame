@@ -14,13 +14,15 @@ const elements = {
   computerScoreDom: document.querySelector('.computerScore'),
   computerHandDom: document.querySelector('.computerRandomHand'),
   separatorDom: document.querySelector('.separator'),
+  winnerMessage: document.querySelector('.winnerMessage'),
+  humanWinnerMessage: 'You win this round',
+  computerWinnerMessage: 'Computer won this round',
 };
 
 let scores = {
   human: 0,
   computer: 0,
 };
-console.log(elements.gameChoices);
 
 function getComputerChoice() {
   return choices[Math.floor(Math.random() * choices.length)];
@@ -69,17 +71,25 @@ function flashResult(userSelection, computerSelection, winner) {
   if (winner === 'human') {
     userElement.classList.add('flashGreen');
     computerElement.classList.add('flashRed');
+    elements.winnerMessage.innerHTML = elements.humanWinnerMessage;
   } else if (winner === 'computer') {
     userElement.classList.add('flashRed');
     computerElement.classList.add('flashGreen');
+    elements.winnerMessage.innerHTML = elements.computerWinnerMessage;
   } else {
     userElement.classList.add('flashGreen');
     computerElement.classList.add('flashGreen');
+    elements.winnerMessage.textContent = 'This round seems like a tie';
   }
 
+  resetRoundUI(userElement, computerElement);
+}
+
+function resetRoundUI(userElement, computerElement) {
   setTimeout(() => {
     userElement.classList.remove('flashGreen', 'flashRed');
     computerElement.classList.remove('flashGreen', 'flashRed');
+    elements.winnerMessage.textContent = 'Choose your hand';
   }, 1500);
 }
 
@@ -96,9 +106,20 @@ function determineWinner(userSelection, computerSelection) {
 }
 
 function disableChoices() {
+  console.log('disableChoices called');
   elements.gameChoices.forEach((card) => {
     card.style.pointerEvents = 'none';
   });
+}
+
+function determineGameWinningCondition() {
+  if (scores.computer == 5) {
+    elements.winnerMessage.textContent = 'Computer won this game, Try again?';
+    return true;
+  } else if (scores.human == 5) {
+    elements.winnerMessage.textContent = 'You won this game, Try again?';
+    return true;
+  }
 }
 
 function enableChoices() {
@@ -121,6 +142,12 @@ getHumanChoice((userSelection) => {
   }
 
   setTimeout(() => {
+    const winner = determineWinner(userSelection, computerSelection);
+    updateScores(winner);
+    flashResult(userSelection, computerSelection, winner);
+  }, 2000);
+
+  setTimeout(() => {
     elements.computerHandDom.classList.remove(`${computerSelection}`, 'card');
     elements.separatorDom.classList.add('hidden');
     enableChoices();
@@ -128,10 +155,32 @@ getHumanChoice((userSelection) => {
   }, 3500);
 
   setTimeout(() => {
-    const winner = determineWinner(userSelection, computerSelection);
-    updateScores(winner);
-    flashResult(userSelection, computerSelection, winner);
-  }, 2000);
+    determineGameWinningCondition();
+
+    if (determineGameWinningCondition()) {
+      const resetButton = document.createElement('button');
+      resetButton.classList.add('resetButton');
+      resetButton.textContent = 'Reset Game';
+      const container = document.querySelector('.container > p');
+      const div = document.createElement('div');
+      div.style.display = 'flex';
+      div.style.justifyContent = 'center';
+      div.appendChild(resetButton);
+      container.appendChild(div);
+
+      resetButton.addEventListener('click', () => {
+        scores.human = 0;
+        scores.computer = 0;
+        elements.humanScoreDom.innerHTML = scores.human;
+        elements.computerScoreDom.innerHTML = scores.computer;
+        elements.winnerMessage.textContent = 'Choose your hand';
+        enableChoices();
+        resetButton.remove();
+      });
+      disableChoices();
+      return;
+    }
+  }, 3550);
 });
 function hideOtherChoices(selectedChoice) {
   elements.gameChoices.forEach((card) => {
@@ -148,6 +197,8 @@ function hideOtherChoices(selectedChoice) {
     }
   });
 }
+
+function restartGame() {}
 
 function showAllChoices() {
   elements.gameChoices.forEach((card) => {
